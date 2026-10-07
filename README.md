@@ -22,7 +22,7 @@ Claude.ai 프로젝트들이 공통으로 참조하는 운영 규칙의 단일 �
 
     ## 공통 운영 규칙
     세션 시작 시 아래 URL을 fetch해서 규칙을 따른다.
-    https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/main/system-and-workflow.md
+    https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/refs/heads/main/system-and-workflow.md
     fetch에 실패하면 아래 요약 규칙만 적용하고, 실패 사실을 사용자에게 알린다.
 
     요약 규칙:
@@ -38,4 +38,5 @@ Claude.ai 프로젝트들이 공통으로 참조하는 운영 규칙의 단일 �
 
 - 프로젝트 고유 값(개별 레포 URL, Notion 페이지 ID·URL 등)을 넣지 않습니다.
 - 수정 후 raw URL에 반영되기까지 시간이 걸릴 수 있습니다. 최대 15분 이상 걸린 사례도 있습니다.
+- 같은 주소를 이미 읽은 세션이나 도구에서는 이전 내용이 오래 남을 수 있습니다. 규칙을 고친 뒤에는 새 대화에서 `##` 제목 목록을 확인하세요. 구버전이 보이면 URL 형태를 바꿔(`/main/` 대신 `/refs/heads/main/`) 읽는 우회가 통한 적이 있습니다. 이 우회가 계속 통한다는 보장은 없습니다.
 - 이 레포는 public이어야 Claude.ai가 raw URL을 읽을 수 있습니다. 개인 정보나 계정 정보를 넣지 않습니다.
