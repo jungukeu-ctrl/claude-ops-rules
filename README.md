@@ -10,6 +10,7 @@ Claude.ai 프로젝트들이 공통으로 참조하는 운영 규칙의 단일 �
 | `templates/index.md` | 프로젝트 메모리용 포인터 템플릿 (Notion URL 기록) |
 | `templates/HISTORY.md` | 프로젝트 메모리용 이력 요약 사본 템플릿 (선택, 보조용) |
 | `templates/notion-history-entry.md` | Notion HISTORY DB의 속성과 항목 본문 형식 |
+| [`MIGRATION.md`](https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/refs/heads/main/MIGRATION.md) | 기존 프로젝트를 공통 규칙 구조로 이행하는 절차 |
 
 ## 구조
 
