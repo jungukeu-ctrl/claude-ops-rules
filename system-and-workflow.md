@@ -37,7 +37,7 @@
 2. **Notion 프로젝트 페이지 fetch** — 개요와 최근 변경 확인
 3. **HISTORY DB 조회** — 상태가 🔔인 항목 전부와 최근 5건. 조회 기능이 막혀 있으면 DB를 fetch하거나 해당 DB 범위의 검색으로 대신한다.
 4. **프로젝트 메모리의 요약 사본** — 있으면 참고만 한다. Notion과 다르면 Notion이 우선이다.
-5. **사용자에게 브리핑** — 현재 상태 요약 + 미결 항목 제시
+5. **사용자에게 브리핑** — 현재 상태 요약 + 미결 항목 제시. 규칙 문서 변경 이력의 마지막 날짜를 한 줄로 표시한다.
 
 fetch 실패 시: 실패한 자원과 사유를 브리핑에 명시하고, 가진 정보로 계속 진행한다.
 
@@ -81,7 +81,7 @@ Claude.ai는 GitHub에 직접 쓸 수 없다. 코드 변경이 필요하면 다�
 | 한계 | 우회 방법 |
 |------|---------|
 | Claude.ai → GitHub 직접 쓰기 불가 | 코드작업지시서 → Claude Code 위임 |
-| GitHub raw fetch 캐시 지연 (15분 이상 걸린 사례도 관찰됨) | 수정 후 GitHub 웹 페이지로 반영 여부를 확인 |
+| GitHub raw fetch 캐시 지연 (15분 이상 걸린 사례도 관찰됨) | URL 끝에 ?d=YYYYMMDD 값을 붙여 fetch(2026-10-08 확인). 같은 날 수정 직후에는 값을 바꿔(예: ?d=20261008b) 다시 fetch. 새 파일의 raw URL이 404일 때도 같은 방법. 1시간 이상 구버전이 반환된 사례가 있다. |
 | 프로젝트 메모리는 보장형 저장소가 아님 (삭제, 정리, 용량 상한) | 이력 원본은 Notion에 둔다 |
 | 프로젝트 메모리 간 격리 | 공유가 필요한 내용은 GitHub raw URL로 공유 |
 | Notion DB 조회 기능이 플랜이나 연결에 따라 제한될 수 있음 | DB fetch 또는 DB 범위 검색으로 대체 |
@@ -98,14 +98,14 @@ Notion 연결이 확인되지 않은 프로젝트는 초기 세팅이 안 된 �
    새로 만드는 경우: 사용자가 지정한 상위 위치 아래에 프로젝트 페이지를 만든다. 위치를 정하지 않으면 비공개 초안으로 만들고 나중에 옮기라고 안내한다.
 3. 프로젝트 페이지의 개요(목적, 기간, 핵심 목표)가 비어 있으면 사용자에게 한두 줄 물어 기록한다.
 4. HISTORY DB가 없으면 만든다. 이미 있는지 먼저 확인하고 중복 생성하지 않는다. 제목은 `HISTORY — {프로젝트명}`, 속성은 아래 템플릿을 따른다.
-   - https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/main/templates/notion-history-entry.md
+   - https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/refs/heads/main/templates/notion-history-entry.md
 5. 기존 이력(프로젝트 문서의 claude/HISTORY.md, 프로젝트 메모리의 HISTORY.md)이 있으면 항목별로 DB에 옮길지 제안하고, 승인되면 옮긴다. 원본 파일은 삭제하지 않는다.
 6. 포인터 저장을 제안한다.
    - 프로젝트 메모리에 index.md로 Notion URL을 저장한다. 형식은 아래 템플릿을 따른다.
-     https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/main/templates/index.md
+     https://raw.githubusercontent.com/jungukeu-ctrl/claude-ops-rules/refs/heads/main/templates/index.md
 7. 결과를 사용자에게 보고한다.
 
-템플릿 fetch에 실패하면 기억에 의존해 임의로 만들지 말고, 실패 사실을 알린 뒤 재시도할지 묻는다.
+템플릿 fetch에 실패하면 기억에 의존해 임의로 만들지 말고, 실패 사실을 알린 뒤 재시도할지 묻는다. 템플릿 fetch에도 같은 캐시 우회 값을 붙인다.
 
 ---
 
@@ -121,6 +121,7 @@ Notion 연결이 확인되지 않은 프로젝트는 초기 세팅이 안 된 �
 
 - 프로젝트 고유 값(Notion ID·URL 포함)을 넣지 않는다.
 - 수정 후 반영까지 시간이 걸릴 수 있다. 최대 15분 이상 걸린 사례도 있다.
+- 수정 후 반영 확인은 ?d= 값을 바꿔 fetch한 결과의 변경 이력 마지막 줄로 한다.
 - 변경하면 아래 변경 이력에 한 줄을 남긴다.
 
 ## 변경 이력
@@ -130,3 +131,4 @@ Notion 연결이 확인되지 않은 프로젝트는 초기 세팅이 안 된 �
 - 2026-10-07: 이력 원본을 프로젝트 메모리에서 Notion HISTORY DB로 변경, Notion 연결 필수화, Notion 사용 불가 시 규칙(7장) 추가
 - 2026-10-07: 초기화 프로토콜 6번에서 claude/index.md 갱신 안내 삭제, 프로젝트 문서를 레거시 스냅샷으로 재정의
 - 2026-10-08: 세션 초기화 0단계 탐색 순서에서 claude/index.md 삭제
+- 2026-10-08: 캐시 우회 값(?d=) 도입, 반영 확인을 변경 이력 마지막 줄 기준으로 변경, 6장 템플릿 URL을 refs/heads/main으로 정리
